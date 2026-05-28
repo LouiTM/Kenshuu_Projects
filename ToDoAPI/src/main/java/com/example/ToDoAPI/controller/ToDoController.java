@@ -1,57 +1,102 @@
 package com.example.ToDoAPI.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.ToDoAPI.domain.ToDo;
-import com.example.ToDoAPI.service.ToDoService;
+import com.example.ToDoAPI.dto.ToDoRequest;
+import com.example.ToDoAPI.dto.ToDoResponse;
+import com.example.ToDoAPI.entity.ToDo;
+import com.example.ToDoAPI.mapper.ToDoMapper;
 
 @RestController
+@RequestMapping("/todos")
 public class ToDoController {
 
 	@Autowired
-	private ToDoService toDoService;
+	ToDoMapper toDoMapper;
 
-	@GetMapping("/ToDo")
-	public List<ToDo> showToDo() {
-		return toDoService.showToDo();
+	@GetMapping("/{id}")
+	@ResponseStatus(HttpStatus.OK)
+	public ToDoResponse findById(@PathVariable int id) {
+		ToDo todo = toDoMapper.findById(id);
+		ToDoResponse toDoResponse = new ToDoResponse();
+		BeanUtils.copyProperties(todo, toDoResponse);
+		return toDoResponse;
 	}
 
-	@GetMapping("/ToDo/{id}")
-	public ToDo showToDoById(@PathVariable String id) {
-		return toDoService.showToDoById(id);
+	@GetMapping
+	@ResponseStatus(HttpStatus.OK)
+	public List<ToDoResponse> getToDos() {
+		List<ToDoResponse> toDoResponseList = new ArrayList<>();
+		List<ToDo> toDoList = toDoMapper.findAll();
+		toDoList.forEach(todo -> {
+			ToDoResponse toDoResponse = new ToDoResponse();
+			BeanUtils.copyProperties(todo, toDoResponse);
+			toDoResponseList.add(toDoResponse);
+		});
+
+		return toDoResponseList;
 	}
 
-	@PostMapping("/ToDo")
-	public void addToDo(@RequestBody ToDo toDo) {
-		toDoService.addToDo(toDo);
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public ToDoResponse doPost(@RequestBody ToDoRequest toDoRequest) {
+		ToDo todo = new ToDo();
+		BeanUtils.copyProperties(toDoRequest, todo);
+		toDoMapper.insert(todo);
+		ToDoResponse toDoResponse = new ToDoResponse();
+		BeanUtils.copyProperties(todo, toDoResponse);
+		return toDoResponse;
 	}
 
-	@DeleteMapping("/ToDo/{id}")
-	public void deleteToDo(@PathVariable String id) {
-		toDoService.deleteToDo(id);
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void doDelete(@PathVariable int id) {
+		toDoMapper.delete(id);
 	}
 
-	@PutMapping("/ToDo/{id}")
-	public void updateToDoById(@RequestBody ToDo toDo, @PathVariable String id) {
-		toDoService.updateToDoById(toDo, id);
+	@PutMapping("/{id}")
+	@ResponseStatus(HttpStatus.OK)
+	public ToDoResponse doPut(@RequestBody ToDoRequest toDoRequest, @PathVariable int id) {
+		ToDo todo = new ToDo();
+		BeanUtils.copyProperties(toDoRequest, todo);
+		todo.setId(id);
+		toDoMapper.update(todo);
+
+		ToDoResponse toDoResponse = new ToDoResponse();
+		BeanUtils.copyProperties(todo, toDoResponse);
+		return toDoResponse;
 	}
 
-	@PutMapping("/ToDo/{id}/{status}")
-	public void statusUpdate(@PathVariable String id, @PathVariable String status) {
-		toDoService.statusUpdate(id, status);
-	}
+	@GetMapping("/{param}/{text}")
+	@ResponseStatus(HttpStatus.OK)
+	public List<ToDoResponse> filterGet(@PathVariable String param, @PathVariable String text) {
 
-	@GetMapping("/ToDo/sort/{category}")
-	public void sortByCategory(@PathVariable String category) {
-		toDoService.sortByCategory(category);
+		List<ToDoResponse> toDoResponseList = new ArrayList<>();
+		List<ToDo> toDoList = new ArrayList<>();
+
+		toDoList = (param.equals("status") ? toDoMapper.filterByStatus(text) : toDoMapper.filterByTitle(text));
+
+		toDoList.forEach(todo -> {
+			ToDoResponse toDoResponse = new ToDoResponse();
+			BeanUtils.copyProperties(todo, toDoResponse);
+			toDoResponseList.add(toDoResponse);
+		});
+
+		return toDoResponseList;
+
 	}
 }

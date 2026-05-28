@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.ToDoAPI.mapper.ToDoMapper">
+    <select id="findById" resultType="com.example.ToDoAPI.entity.ToDo">
+        SELECT * FROM todo WHERE id  = #{id}
+    </select>
+    <select id="findAll" resultType="com.example.ToDoAPI.entity.ToDo">
+        SELECT * FROM todo ORDER BY id
+    </select>
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO todo (title,status,detail) VALUES (#{todo.title}, #{todo.status}, #{todo.detail})
+    </insert>
+    <update id="update">
+        UPDATE todo
+        SET title = #{todo.title},
+        		status = #{todo.status},
+        		detail = #{todo.detail}
+        	WHERE
+            id = #{todo.id}
+    </update>
+    <delete id="delete">
+        DELETE FROM todo WHERE id = #{todo.id}
+    </delete>
+    <select id="filterByStatus" resultType="com.example.ToDoAPI.entity.ToDo">
+    		SELECT * FROM todo WHERE status = #{status}
+    	</select>
+    	<select id="filterByTitle" resultType="com.example.ToDoAPI.entity.ToDo">
+    		SELECT * FROM todo WHERE title LIKE CONCAT('%', #{title}, '%')
+    	</select>
+</mapper>

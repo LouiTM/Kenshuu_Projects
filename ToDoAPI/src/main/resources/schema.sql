@@ -1,0 +1,9 @@
+DROP TABLE IF EXISTS todo;
+
+CREATE TABLE todo (
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  title VARCHAR(20),
+  status VARCHAR(20),
+  detail VARCHAR(255),
+  PRIMARY KEY(id)
+);
