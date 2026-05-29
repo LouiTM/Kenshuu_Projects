@@ -1,0 +1,10 @@
+INSERT INTO todo (title, status, detail) VALUES ('部屋の掃除', '未着手', '週末にリビングと寝室の掃除機がけと片付けを行う。');
+INSERT INTO todo (title, status, detail) VALUES ('食材の買い出し', '完了', '今週分の野菜、肉、牛乳を近所のスーパーでん買う。');
+INSERT INTO todo (title, status, detail) VALUES ('月次報告書の作成', '進行中', '5月度の売上データをまとめ、課長に提出する報告書を作成する。');
+INSERT INTO todo (title, status, detail) VALUES ('A社へメール返信', '未着手', '新プロジェクトの見積もりに関する問い合わせに回答する。');
+INSERT INTO todo (title, status, detail) VALUES ('美容院の予約', '完了', '土曜日の14時にカットとカラーの予約を入れる。');
+INSERT INTO todo (title, status, detail) VALUES ('ジムで筋トレ', '進行中', '健康維持のため、仕事帰りに週3回のトレーニングを行う。');
+INSERT INTO todo (title, status, detail) VALUES ('技術書の読書', '未着手', '今月中に新しく購入したSQLの参考書を読み終える。' );
+INSERT INTO todo (title, status, detail) VALUES ('定期券の更新', '未着手', '来月からの通勤定期券を駅の自動券売機で購入する。');
+INSERT INTO todo (title, status, detail) VALUES ('歯医者の定期検診', '完了', '半年に一度のクリーニングと虫歯チェックを受ける。');
+INSERT INTO todo (title, status, detail) VALUES ('夏休みの旅行計画', '進行中', '沖縄旅行のホテルと航空券の候補をいくつかピックアップする。');
