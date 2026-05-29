@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -81,7 +82,7 @@ public class ToDoController {
 		return toDoResponse;
 	}
 
-	@GetMapping("/{param}/{text}")
+	@GetMapping("/filter/{param}/{text}")
 	@ResponseStatus(HttpStatus.OK)
 	public List<ToDoResponse> filterGet(@PathVariable String param, @PathVariable String text) {
 
@@ -98,5 +99,34 @@ public class ToDoController {
 
 		return toDoResponseList;
 
+	}
+
+	@PutMapping("/{id}/{status}")
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<String> updateStatus(@PathVariable String status, @PathVariable int id) {
+		toDoMapper.updateS(status, id);
+		if (status.equals("完了")) {
+			return ResponseEntity.ok("お疲れ様です！");
+		} else if (status.equals("進行中")) {
+			return ResponseEntity.ok("あと少し！");
+		} else if (status.equals("未着手")) {
+			return ResponseEntity.ok("頑張れ！");
+		} else {
+			return null;
+		}
+	}
+
+	@GetMapping("/sort/{rule}")
+	@ResponseStatus(HttpStatus.OK)
+	public List<ToDoResponse> sortGet(@PathVariable String rule) {
+		List<ToDoResponse> toDoResponseList = new ArrayList<>();
+		List<ToDo> toDoList = new ArrayList<>();
+		toDoList = (rule.equals("id") ? toDoMapper.sortById() : toDoMapper.sortByStatus());
+		toDoList.forEach(todo -> {
+			ToDoResponse toDoResponse = new ToDoResponse();
+			BeanUtils.copyProperties(todo, toDoResponse);
+			toDoResponseList.add(toDoResponse);
+		});
+		return toDoResponseList;
 	}
 }

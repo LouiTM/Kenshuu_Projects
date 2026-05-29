@@ -18,9 +18,16 @@ public interface ToDoMapper {
 
 	int update(@Param("todo") ToDo todo);
 
+	int updateS(String status, int id);
+
 	boolean delete(int id);
 
 	List<ToDo> filterByStatus(String status);
 
 	List<ToDo> filterByTitle(String title);
+
+	List<ToDo> sortById();
+
+	List<ToDo> sortByStatus();
+
 }

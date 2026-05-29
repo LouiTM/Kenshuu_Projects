@@ -7,6 +7,18 @@
     <select id="findAll" resultType="com.example.ToDoAPI.entity.ToDo">
         SELECT * FROM todo ORDER BY id
     </select>
+    <select id="filterByStatus" resultType="com.example.ToDoAPI.entity.ToDo">
+    		SELECT * FROM todo WHERE status = #{status}
+    	</select>
+    	<select id="filterByTitle" resultType="com.example.ToDoAPI.entity.ToDo">
+    		SELECT * FROM todo WHERE title LIKE CONCAT('%', #{title}, '%')
+    	</select>
+    	<select id="sortById" resultType="com.example.ToDoAPI.entity.ToDo">
+    		SELECT * FROM todo ORDER BY id
+    	</select>
+    	<select id="sortByStatus" resultType="com.example.ToDoAPI.entity.ToDo">
+    		SELECT * FROM todo ORDER BY FIELD(status, '完了', '進行中', '未着手'), id
+    	</select>
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO todo (title,status,detail) VALUES (#{todo.title}, #{todo.status}, #{todo.detail})
     </insert>
@@ -14,17 +26,20 @@
         UPDATE todo
         SET title = #{todo.title},
         		status = #{todo.status},
-        		detail = #{todo.detail}
+        		detail = #{todo.detail},
+        		updated_day = CURRENT_TIMESTAMP
         	WHERE
             id = #{todo.id}
+    </update>
+    <update id="updateS">
+        UPDATE todo
+        SET
+        		status = #{status},
+        		updated_day = CURRENT_TIMESTAMP      		
+        	WHERE
+            id = #{id}
     </update>
     <delete id="delete">
         DELETE FROM todo WHERE id = #{todo.id}
     </delete>
-    <select id="filterByStatus" resultType="com.example.ToDoAPI.entity.ToDo">
-    		SELECT * FROM todo WHERE status = #{status}
-    	</select>
-    	<select id="filterByTitle" resultType="com.example.ToDoAPI.entity.ToDo">
-    		SELECT * FROM todo WHERE title LIKE CONCAT('%', #{title}, '%')
-    	</select>
 </mapper>
