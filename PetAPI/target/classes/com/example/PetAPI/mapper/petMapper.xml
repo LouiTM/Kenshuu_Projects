@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.PetAPI.mapper.petMapper">
+    <select id="findById" resultType="com.example.PetAPI.domain.Pet">
+        SELECT * FROM pet WHERE id  = #{id}
+    </select>
+    <select id="findAll" resultType="com.example.PetAPI.domain.Pet">
+        SELECT * FROM pet ORDER BY id
+    </select>
+    <select id="filterByStatus" resultType="com.example.PetAPI.domain.Pet">
+    		SELECT * FROM pet WHERE status = #{status}
+    	</select>
+    	<select id="sortById" resultType="com.example.PetAPI.domain.Pet">
+    		SELECT * FROM pet ORDER BY id
+    	</select>
+    	<select id="sortByStatus" resultType="com.example.PetAPI.domain.Pet">
+    		SELECT * FROM pet ORDER BY FIELD(status, 'available', 'pending', 'sold'), id
+    	</select>
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO pet (name,status,category) VALUES (#{pet.name}, #{pet.status}, #{pet.category})
+    </insert>
+    <update id="update">
+        UPDATE pet
+        SET name = #{pet.name},
+        		status = #{pet.status},
+        		category = #{pet.category},
+        		updated_day = CURRENT_TIMESTAMP
+        	WHERE
+            id = #{pet.id}
+    </update>
+    <update id="updateS">
+        UPDATE pet
+        SET
+        		status = #{status},
+        		updated_day = CURRENT_TIMESTAMP      		
+        	WHERE
+            id = #{id}
+    </update>
+    <delete id="delete">
+        DELETE FROM pet WHERE id = #{pet.id}
+    </delete>
+</mapper>
